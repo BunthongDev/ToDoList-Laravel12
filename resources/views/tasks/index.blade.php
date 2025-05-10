@@ -25,9 +25,9 @@
         </form>
 
         <!-- Task List -->
-        <ul class="space-y-5">
+        <ul id ="sortable-list" class="space-y-5">
             @foreach ($tasks as $task)
-                <li class="border-2 border-dotted rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md">
+                <li data-id="{{ $task->id }}" class="border-2 border-dotted rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md">
                     <!-- Date Info -->
                     <div class="text-xs text-gray-400 mb-2">
                         <span>{{ $task->created_at->format('M d, Y h:i A') }}</span>
@@ -65,6 +65,10 @@
                                 class="{{ $task->status === 'done' ? 'line-through text-gray-400' : 'text-gray-800' }} text-sm sm:text-base font-bold">
                                 {{ $task->title }}
                             </span>
+                            
+                            {{-- add a handle icon to each item --}}
+                            <span class="handle cursor-move text-gray-400">☰</span>
+
 
                         </div>
 
@@ -84,6 +88,32 @@
             @endforeach
         </ul>
     </div>
+    
+    {{-- Add Drag-and-Drop Reordering to Your Task List using SortableJS --}}
+    
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+    const sortable = new Sortable(document.getElementById('sortable-list'), {
+        animation: 150,
+        handle: '.handle', // optional: add drag handle icon
+        onEnd: function (evt) {
+            const orderedIds = Array.from(document.querySelectorAll('#sortable-list li'))
+                .map(item => item.getAttribute('data-id'));
+
+            // Send order to server (optional)
+            fetch('/tasks/reorder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ order: orderedIds })
+            });
+        }
+    });
+</script>
+
+    
 </body>
 
 </html>

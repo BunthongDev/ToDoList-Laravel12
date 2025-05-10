@@ -10,6 +10,8 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
+        $tasks = Task::orderBy('order')->get();
+
         return view('tasks.index', compact('tasks'));
     }
 
@@ -53,4 +55,16 @@ class TaskController extends Controller
 
         return redirect('/');
     }
+    
+    public function reorder(Request $request)
+    {
+        foreach ($request->order as $index => $id) {
+            Task::where('id', $id)->update(['order' => $index]);
+
+
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }
