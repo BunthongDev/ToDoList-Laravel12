@@ -18,7 +18,7 @@
         <form method="POST" action="/tasks" class="flex flex-col sm:flex-row gap-3 mb-8">
             @csrf
             <input type="text" name="title" placeholder="Add a new task..."
-                class="flex-1 border-2 border-black rounded-xl px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                class="flex-1 border-2 border-black rounded-xl px-4 py-2 text-sm font-bold sm:text-base focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                 required>
             <button type="submit"
                 class="bg-gray-900 hover:bg-gray-800 text-white px-5 py-2 rounded-xl text-sm sm:text-base transition">Add</button>
